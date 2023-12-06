@@ -5,6 +5,7 @@ from pprint import pprint
 valeurs_variables = {}
 resultats = {}
 
+
 def listdirectory(path, variables_a_chercher):
     # Liste des fichiers avec l'extension .ipynb dans le répertoire
     fichiers_ipynb = [fichier for fichier in os.listdir(path) if fichier.endswith('.ipynb')]
@@ -33,7 +34,10 @@ def listdirectory(path, variables_a_chercher):
 
                 # Ajouter les notes à l'élève et à l'exercice spécifiés
                 for exercice, note in valeurs_variables.items():
+                    #met dans le dictionnaire resultats le nom et dedans l'exercice étant la clé et note étant la valeur 
                     resultats[nom][exercice] = note
+                    # moyenne_eleve= sum(note)/len(notes)
+                    # print(moyenne_eleve)
 
     # Afficher le dictionnaire résultant
     pprint(resultats)
@@ -50,31 +54,51 @@ listdirectory(chemin, notes)
 totaux = [7, 12, 10, 17, 14, 12]
 ponderations = [2, 2, 4, 2, 4, 1]
 
+
 def moyenne():
+    # Initialisation de la somme des moyennes par élève
     somme_moyenne_par_eleve = 0
+    
+    # Boucle à travers chaque élève et ses résultats
     for eleve, valeur in resultats.items():
+        # Liste pour stocker les notes pondérées pour chaque exercice
         exo = []
+        # Initialisation de la somme pondérée des notes
         note_ponderee_somme = 0 
-        for exercice,note in valeur.items():
+        
+        # Boucle à travers chaque exercice et note de l'élève
+        for exercice, note in valeur.items():
+            # Extraction du numéro de l'exercice
             exer = [*exercice.replace("note", "")]
-            if len(exer)>1:
+            
+            # Vérification de la longueur du numéro de l'exercice
+            if len(exer) > 1:
                 try:
+                    # Ajout de la note à la liste correspondante à l'exercice
                     exo[int(exer[0])] += note
                 except:
+                    # Si la liste n'existe pas encore, la créer et ajouter la note
                     exo.append(note)
             else:
+                # Si l'exercice n'a qu'un chiffre, ajouter simplement la note
                 exo.append(note)
 
-            
+        # Calcul de la note pondérée pour chaque exercice
         for note, ponderation, total in zip(exo, ponderations, totaux):
             note_ponderee_somme += ponderation * (note * 20) / total
-            # Initialisation de la somme pondérée des notes
+            
+        # Calcul de la moyenne pondérée par élève
         moyenne_par_eleve = note_ponderee_somme / sum(ponderations)
+        # Ajout de la moyenne de l'élève à la somme totale
         somme_moyenne_par_eleve += moyenne_par_eleve
+    
+    # Calcul de la moyenne de classe
     moyenne_de_classe = somme_moyenne_par_eleve / len(resultats)
-    print("la moyenne general est : ",round(moyenne_de_classe,2))
-        
-        
+    
+    # Affichage de la moyenne générale de la classe arrondie à deux décimales
+    print("la moyenne general est : ", round(moyenne_de_classe, 2))
+
+# Appel de la fonction moyenne
 moyenne()
 
 
