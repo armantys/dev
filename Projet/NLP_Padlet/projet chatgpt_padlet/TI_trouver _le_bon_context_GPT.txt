@@ -1,0 +1,1 @@
+"role": "system", "content": "fait une réponse sous forme Json  Etape X -> titre de l'étape, description: description de l'étape"

@@ -1,34 +1,25 @@
-from openai import OpenAI
+import os
+from openai import AzureOpenAI
 import json
-client = OpenAI(api_key="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")
+client = AzureOpenAI(
+  api_key = os.getenv("12699e8302664cdc9e37e3fd929e3fe4"),  
+  api_version = "2023-05-15",
+  azure_endpoint = os.getenv("AZURE_OPENAI_ENDPOINT")
+)
 
-messages = [
-    {"role": "system", "content": "fait une réponse sous forme Json  Etape X -> titre de l'étape, description: description de l'étape"}
-]
+response = client.chat.completions.create(
+    model="gpt-35-turbo", # model = "deployment_name".
+    messages=[
+        {"role": "system", "content": "Assistant is a large language model trained by OpenAI."},
+        {"role": "user", "content": "Who were the founders of Microsoft?"}
+    ]
+)
 
-print("Bonjour, n'hésitez pas à me poser des questions ou appuyer sur CTRL+C pour quitter !")
+#print(response)
+print(response.model_dump_json(indent=2))
+print(response.choices[0].message.content)
 
 mondico = {}
-
-
-user_input = input("> ")
-if len(user_input)< 10:
-    print("votre message est trop court")
-    user_input = input("> ")
-elif user_input.isdigit():
-    print("Veuillez entrer du texte, pas uniquement des chiffres.")
-    user_input = input("> ")
-else:
-    
-
-    response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=messages,
-        temperature=1
-    ).choices[0].message
-
-    messages.append(response)
-
 try:
     # Ajouter la réponse au dictionnaire
     mondico[len(mondico) + 1] = {"response": response.content}

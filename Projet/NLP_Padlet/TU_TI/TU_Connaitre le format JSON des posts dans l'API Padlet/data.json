@@ -1,0 +1,20 @@
+payload = {
+    "data": {                                                       "_comment": "le data englobe les données principal de la requête",
+        "type": "post",                                             "_comment": "le type indique la resource que je veux créer ou mettre a jour, ici c'est un post",
+        "attributes": {                                             "_comment": "l'attribue contient les les attributs de la ressource, comme le contenu du post ou de ça couleur",
+            "content": {                                            "_comment": "le content contient le 'subject' le titre du post et le 'body' c'est a dire la description",
+                "subject": f"{etape}: {infos['titre']}",
+                "body": infos['description'],
+            
+            },
+            "color": "red",                                         "_comment": "indique la couleur du post qui va être créé, ici il sera rouge",
+        },
+        "relationships": {                                          "_comment": "'relationships' est utilisée pour spécifier les relation entre la ressource principal et d'autre ressource, ici j'ai une relation avec une section",
+            "section": {                                            "_comment": "indique la section auquelle le post appartien",
+                "data": {                                           "_comment": "contient l'ID de la section que l'on doit utiliser",
+                    "id": SECTION_ID
+                }
+            }
+        }
+    }
+}
