@@ -2,7 +2,7 @@ import requests
 from connexionBDD import inserer_donnees_raspy
 import sys  # Importez le module sys pour manipuler le code de sortie
 
-url = "http://192.168.20.183/modulesGrove.php?DHT"
+url = "http://192.168.20.183/modulesGrove.php?DH"
 response = requests.get(url)
 
 if response.status_code == 200:
