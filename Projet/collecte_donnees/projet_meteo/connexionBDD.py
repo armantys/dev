@@ -1,61 +1,73 @@
-#requete_bdd.py
-
 import mysql.connector
+import sys
+import subprocess
 
-def inserer_donnees_meteo(temperature_2m, relative_humidity_2m,nom_lieu):
-    # Connect to the MySQL database
-    conn = mysql.connector.connect(
-        host='192.168.20.61',
-        user='ludo',
-        password='root',
-        database='domotique'
-    )
+def inserer_donnees_meteo(temperature, humidite, ville):
+    try:
+        # Connect to the MySQL database
+        conn = mysql.connector.connect(
+            host='192.168.20.61',
+            user='ludo',
+            password='root',
+            database='domotique'
+        )
 
-    # Create a MySQL cursor
-    cursor = conn.cursor()
+        # Create a MySQL cursor
+        cursor = conn.cursor()
 
-    # Insert data into the database
-    insert_query = """
-        INSERT INTO donneesMeteo (temperature_donneesMeteo, humidite_donneesMeteo, nom_lieu)
-        VALUES (%s, %s, %s)
-    """
+        # Insert data into the database
+        insert_query = """
+            INSERT INTO donneesMeteo (temperature_donneesMeteo, humidite_donneesMeteo, nom_lieu)
+            VALUES (%s, %s, %s)
+        """
 
-    data_to_insert = (temperature_2m, relative_humidity_2m,nom_lieu)
+        data_to_insert = (temperature, humidite, ville)
 
-    cursor.execute(insert_query, data_to_insert)
+        cursor.execute(insert_query, data_to_insert)
 
-    # Commit the transaction
-    conn.commit()
+        # Commit the transaction
+        conn.commit()
 
-    # Close the cursor and connection
-    cursor.close()
-    conn.close()
+        # Close the cursor and connection
+        cursor.close()
+        conn.close()
 
-def inserer_donnees_raspy(nomcap,temp, humidite, nom_lieu):
-    # Connect to the MySQL database
-    conn = mysql.connector.connect(
-        host='192.168.20.61',
-        user='ludo',
-        password='root',
-        database='domotique'
-    )
+    except SystemExit as e:
+        print("Impossible de se connecter à la base de données.")
+        subprocess.run(["bash", "gestionErreur.sh", "error_bdd"])
+        sys.exit(3)
 
-    # Create a MySQL cursor
-    cursor = conn.cursor()
+def inserer_donnees_raspy(nom_raspberry, temperature, humidite, emplacement):
+    try:
+        # Connect to the MySQL database
+        conn = mysql.connector.connect(
+            host='192.168.20.61',
+            user='ludo',
+            password='root',
+            database='domotique'
+        )
 
-    # Insert data into the database
-    insert_query = """
-        INSERT INTO capteurs (nom_capteur,temperature_capteur, humidite_capteur, nom_lieu)
-        VALUES (%s,%s, %s, %s)
-    """
+        # Create a MySQL cursor
+        cursor = conn.cursor()
 
-    data_to_insert = (nomcap, temp, humidite,nom_lieu)
+        # Insert data into the database
+        insert_query = """
+            INSERT INTO capteurs (nom_capteur, temperature_capteur, humidite_capteur, nom_lieu)
+            VALUES (%s, %s, %s, %s)
+        """
 
-    cursor.execute(insert_query, data_to_insert)
+        data_to_insert = (nom_raspberry, temperature, humidite, emplacement)
 
-    # Commit the transaction
-    conn.commit()
+        cursor.execute(insert_query, data_to_insert)
 
-    # Close the cursor and connection
-    cursor.close()
-    conn.close()
+        # Commit the transaction
+        conn.commit()
+
+        # Close the cursor and connection
+        cursor.close()
+        conn.close()
+
+    except SystemExit as e:
+        print(f"Erreur lors de la connexion à la base de données : {e}")
+        subprocess.run(["bash", "gestionErreur.sh", "error_bdd"])
+        sys.exit(3)
