@@ -1,7 +1,8 @@
 # main.py
-from connexionBDD import inserer_donnees_meteo, inserer_donnees_raspy
-from api_meteo import obtenir_donnees_meteo
+from connexionBDD import inserer_donnees_meteo, inserer_donnees_raspy, inserer_donnees_comp_api
+from api_meteo import obtenir_donnees_meteo, obtenir_donnees_ludo_api
 from rasp import obtenir_donnees_raspy
+from recup_flo import obtenir_donnees_flo_api
 import sys
 import logging
 
@@ -18,6 +19,10 @@ def main():
         temp_meteo, humidite_meteo = obtenir_donnees_meteo()
         # Obtenir les données du Raspberry Pi
         temperature_raspy, humidite_raspy = obtenir_donnees_raspy()
+        # Obtenir les données de flo
+        temperature_flo, humidite_flo, ressentie_flo, pression_flo, vitessevent_flo, directionvent_flo  = obtenir_donnees_flo_api()
+        # Obtenir les données de ludo
+        temperature_ludo, humidite_ludo = obtenir_donnees_ludo_api()
         
         if temp_meteo is not None and humidite_meteo is not None and temperature_raspy is not None and humidite_raspy is not None:
             # Utiliser la fonction d'insertion avec des valeurs par défaut pour les paramètres manquants
@@ -32,8 +37,22 @@ def main():
                 humidite=humidite_raspy,
                 emplacement='fenetre_265'
             )
+            inserer_donnees_comp_api(
+                temperature_ludo = temperature_ludo,
+                humidite_ludo= humidite_ludo,
+                temperature_flo=temperature_flo,
+                humidite_flo= humidite_flo,
+                ressentie_flo= ressentie_flo,
+                pression_flo= pression_flo,
+                vitessevent_flo= vitessevent_flo,
+                directionvent_flo= directionvent_flo
+
+            )
+
+
             print(f"Données météo insérées : Température : {temp_meteo}, Humidité : {humidite_meteo}")
             print(f"Données Raspberry Pi insérées : Température : {temperature_raspy}, Humidité : {humidite_raspy}")
+            print(f"Données météo comparaison insérées : Température de ludo : {temperature_ludo}, Humidité de ludo : {humidite_ludo}, Température de flo : {temperature_flo}, humidité de flo : {humidite_flo}, Température ressentie de flo : {ressentie_flo}, pression atmosphérique de flo : {pression_flo}, vitesse du vent de flo : {vitessevent_flo}, direction du vent de flo : {directionvent_flo}")
         else:
             print("Les données de température et d'humidité ne sont pas disponibles dans la réponse.")
             erreur = True
