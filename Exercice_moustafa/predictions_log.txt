@@ -1,0 +1,23 @@
+Image : UploadedFile(file_id='e1aafc04-f699-4758-958f-4dbc02f00149', name='2.png', type='image/png', size=301, _file_urls=file_id: "e1aafc04-f699-4758-958f-4dbc02f00149"
+upload_url: "/_stcore/upload_file/db6356c0-d689-45c1-8d93-6e7ce2fdea2e/e1aafc04-f699-4758-958f-4dbc02f00149"
+delete_url: "/_stcore/upload_file/db6356c0-d689-45c1-8d93-6e7ce2fdea2e/e1aafc04-f699-4758-958f-4dbc02f00149"
+), Classe réelle : 0, Classe prédite : 3, Prédiction correcte : False
+Image : UploadedFile(file_id='e1aafc04-f699-4758-958f-4dbc02f00149', name='2.png', type='image/png', size=301, _file_urls=file_id: "e1aafc04-f699-4758-958f-4dbc02f00149"
+upload_url: "/_stcore/upload_file/db6356c0-d689-45c1-8d93-6e7ce2fdea2e/e1aafc04-f699-4758-958f-4dbc02f00149"
+delete_url: "/_stcore/upload_file/db6356c0-d689-45c1-8d93-6e7ce2fdea2e/e1aafc04-f699-4758-958f-4dbc02f00149"
+), Classe réelle : 3, Classe prédite : 3, Prédiction correcte : True
+Image : UploadedFile(file_id='e1aafc04-f699-4758-958f-4dbc02f00149', name='2.png', type='image/png', size=301, _file_urls=file_id: "e1aafc04-f699-4758-958f-4dbc02f00149"
+upload_url: "/_stcore/upload_file/db6356c0-d689-45c1-8d93-6e7ce2fdea2e/e1aafc04-f699-4758-958f-4dbc02f00149"
+delete_url: "/_stcore/upload_file/db6356c0-d689-45c1-8d93-6e7ce2fdea2e/e1aafc04-f699-4758-958f-4dbc02f00149"
+), Classe réelle : 2, Classe prédite : 3, Prédiction correcte : False
+Classe réelle : 0, Classe prédite : 3, Prédiction correcte : False
+Classe réelle : 2, Classe prédite : 3, Prédiction correcte : False
+Classe réelle : 2, Classe prédite : 1, Prédiction correcte : False
+Classe réelle : 4, Classe prédite : 1, Prédiction correcte : False
+Classe réelle : 5, Classe prédite : 1, Prédiction correcte : False
+Classe réelle : 4, Classe prédite : 1, Prédiction correcte : False
+Classe réelle : 4, Classe prédite : 1, Prédiction correcte : False
+Classe réelle : 5, Classe prédite : 1, Prédiction correcte : False
+Classe réelle : 5, Classe prédite : 1, Prédiction correcte : False
+Classe réelle : 5, Classe prédite : 3, Prédiction correcte : False
+Classe réelle : 5, Classe prédite : 1, Prédiction correcte : False
