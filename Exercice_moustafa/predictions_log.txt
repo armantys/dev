@@ -21,3 +21,5 @@ Classe réelle : 5, Classe prédite : 1, Prédiction correcte : False
 Classe réelle : 5, Classe prédite : 1, Prédiction correcte : False
 Classe réelle : 5, Classe prédite : 3, Prédiction correcte : False
 Classe réelle : 5, Classe prédite : 1, Prédiction correcte : False
+Classe réelle : 0, Classe prédite : 1, Prédiction correcte : False
+Classe réelle : 5, Classe prédite : 1, Prédiction correcte : False
