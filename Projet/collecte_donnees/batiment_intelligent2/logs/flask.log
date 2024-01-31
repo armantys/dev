@@ -47,3 +47,70 @@ WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 127-019-593
 INFO:app:Login
 INFO:werkzeug:127.0.0.1 - - [31/Jan/2024 10:10:46] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.10:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 739-680-988
+INFO:app:Login
+INFO:werkzeug:127.0.0.1 - - [31/Jan/2024 16:26:39] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [31/Jan/2024 16:26:39] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+INFO:app:Register
+INFO:werkzeug:127.0.0.1 - - [31/Jan/2024 16:26:47] "GET /register HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'c:\\Users\\admin\\OneDrive\\Documents\\GitHub\\ludovic.souquet\\Projet\\collecte_donnees\\batiment_intelligent2\\app.py', reloading
+INFO:werkzeug: * Detected change in 'c:\\Users\\admin\\OneDrive\\Documents\\GitHub\\ludovic.souquet\\Projet\\collecte_donnees\\batiment_intelligent2\\app.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 739-680-988
+INFO:werkzeug: * Detected change in 'c:\\Users\\admin\\OneDrive\\Documents\\GitHub\\ludovic.souquet\\Projet\\collecte_donnees\\batiment_intelligent2\\app.py', reloading
+INFO:werkzeug: * Detected change in 'c:\\Users\\admin\\OneDrive\\Documents\\GitHub\\ludovic.souquet\\Projet\\collecte_donnees\\batiment_intelligent2\\app.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 739-680-988
+INFO:werkzeug: * Detected change in 'c:\\Users\\admin\\OneDrive\\Documents\\GitHub\\ludovic.souquet\\Projet\\collecte_donnees\\batiment_intelligent2\\app.py', reloading
+INFO:werkzeug: * Detected change in 'c:\\Users\\admin\\OneDrive\\Documents\\GitHub\\ludovic.souquet\\Projet\\collecte_donnees\\batiment_intelligent2\\app.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 739-680-988
+INFO:werkzeug: * Detected change in 'c:\\Users\\admin\\OneDrive\\Documents\\GitHub\\ludovic.souquet\\Projet\\collecte_donnees\\batiment_intelligent2\\app.py', reloading
+INFO:werkzeug: * Detected change in 'c:\\Users\\admin\\OneDrive\\Documents\\GitHub\\ludovic.souquet\\Projet\\collecte_donnees\\batiment_intelligent2\\app.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 739-680-988
+INFO:werkzeug: * Detected change in 'c:\\Users\\admin\\OneDrive\\Documents\\GitHub\\ludovic.souquet\\Projet\\collecte_donnees\\batiment_intelligent2\\app.py', reloading
+INFO:werkzeug: * Detected change in 'c:\\Users\\admin\\OneDrive\\Documents\\GitHub\\ludovic.souquet\\Projet\\collecte_donnees\\batiment_intelligent2\\app.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.10:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 739-680-988
+INFO:app:Login
+INFO:werkzeug:127.0.0.1 - - [31/Jan/2024 16:30:03] "GET / HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'c:\\Users\\admin\\OneDrive\\Documents\\GitHub\\ludovic.souquet\\Projet\\collecte_donnees\\batiment_intelligent2\\app.py', reloading
+INFO:werkzeug: * Detected change in 'c:\\Users\\admin\\OneDrive\\Documents\\GitHub\\ludovic.souquet\\Projet\\collecte_donnees\\batiment_intelligent2\\app.py', reloading
+INFO:werkzeug: * Detected change in 'c:\\Users\\admin\\OneDrive\\Documents\\GitHub\\ludovic.souquet\\Projet\\collecte_donnees\\batiment_intelligent2\\app.py', reloading
+INFO:werkzeug: * Detected change in 'c:\\Users\\admin\\OneDrive\\Documents\\GitHub\\ludovic.souquet\\Projet\\collecte_donnees\\batiment_intelligent2\\app.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 739-680-988
+INFO:werkzeug: * Detected change in 'c:\\Users\\admin\\OneDrive\\Documents\\GitHub\\ludovic.souquet\\Projet\\collecte_donnees\\batiment_intelligent2\\app.py', reloading
+INFO:werkzeug: * Detected change in 'c:\\Users\\admin\\OneDrive\\Documents\\GitHub\\ludovic.souquet\\Projet\\collecte_donnees\\batiment_intelligent2\\app.py', reloading
+INFO:werkzeug: * Detected change in 'c:\\Users\\admin\\OneDrive\\Documents\\GitHub\\ludovic.souquet\\Projet\\collecte_donnees\\batiment_intelligent2\\app.py', reloading
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.10:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with watchdog (windowsapi)
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 739-680-988
+INFO:app:Login
+INFO:werkzeug:127.0.0.1 - - [31/Jan/2024 16:32:13] "GET / HTTP/1.1" 200 -
