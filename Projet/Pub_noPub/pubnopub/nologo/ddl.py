@@ -3,7 +3,6 @@ import requests
 from urllib.parse import urlparse
 from PIL import Image
 import shutil
-import imghdr  # Module pour détecter le type d'image à partir du contenu
 
 def download_images(file_path, output_folder):
     with open(file_path, 'r') as file:
@@ -34,12 +33,12 @@ def download_images(file_path, output_folder):
                 # Utilise les parties significatives de l'URL pour générer un nom de fichier
                 filename = f"{index}.{file_extension.lstrip('.')}"
 
-                # Si le fichier n'a pas d'extension, essaye de la déduire
+                # Si le fichier n'a pas d'extension, essaye de la déduire avec Pillow
                 if not file_extension:
-                    # Utilise imghdr pour détecter le type d'image
-                    image_type = imghdr.what(None, h=response.content)
-                    if image_type:
-                        filename = f"{index}.{image_type}"
+                    # Utilise Pillow pour ouvrir l'image et obtenir le format
+                    image = Image.open(BytesIO(response.content))
+                    image_type = image.format.lower()
+                    filename = f"{index}.{image_type}"
 
                 filepath = os.path.join(output_folder, filename)
                 with open(filepath, 'wb') as img_file:
