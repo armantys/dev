@@ -1,12 +1,13 @@
 from flask import Flask
-from __init__ import create_app
-import sys
-import logging
+from __init__ import create_app, db  # Importez également db si nécessaire
+from auth import auth  # Importez le blueprint 'auth'
 
-
-#--------------- VIEW FUNCTION------------------------------------------------
-
+# Créez l'application Flask
 app = create_app()
-#main method called web server application
+
+# Enregistrez le blueprint 'auth' dans l'application
+app.register_blueprint(auth)
+
+# main method called web server application
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True) #runs a local server on a port 5000
+    app.run(host='0.0.0.0', port=5000, debug=True)
