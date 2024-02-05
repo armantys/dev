@@ -14,7 +14,8 @@ def create_app(test_config=None):
         app.config.from_mapping(
             SECRET_KEY=os.getenv("SECRET_KEY"),
             SQLALCHEMY_DATABASE_URI='mysql+mysqlconnector://ludo:root@192.168.20.61/domotique',  
-            SQLALCHEMY_TRACK_MODIFICATIONS=False
+            SQLALCHEMY_TRACK_MODIFICATIONS=False,
+            JWT_SECRET_KEY='pomme'
         )
     else:
         app.config.from_mapping(test_config)

@@ -4,6 +4,7 @@ from flask import Blueprint, request, jsonify
 from werkzeug.security import check_password_hash, generate_password_hash
 import validators
 from __init__ import db
+from flask_jwt_extended import jwt_required,create_access_token, create_refresh_token, get_jwt_identity
 
 auth = Blueprint("auth", __name__, url_prefix="/api/v1/auth")
 
@@ -51,19 +52,40 @@ def login():
         if user is None:
             return jsonify({'error': 'Utilisateur non trouvé'}), 401  # 401 Unauthorized
 
-        if check_password_hash(Utilisateurs.mdp_utilisateur, password):
-            return jsonify({'message': 'Connexion réussie'}), 200  # 200 OK
+        if check_password_hash(user.mdp_utilisateur, password):
+            # Inclure 'hashed_password' dans la réponse
+            refresh = create_refresh_token(identity=user.id_utilisateur)
+            access = create_access_token(identity=user.id_utilisateur)
+
+
+            return jsonify({
+
+                'user':{
+                    'refresh': refresh,
+                    'access': access,
+                    'nom_utilisateur':user.nom_utilisateur
+                }
+                }), 200  # 200 OK
+
         else:
             return jsonify({'error': 'Mot de passe incorrect'}), 401  # 401 Unauthorized
     except Exception as e:
-        print(f"Exception in login endpoint: {e}")  # Ajoutez cette ligne pour imprimer l'exception
+        print(f"Exception in login endpoint: {e}")
         return jsonify({'error': 'Une erreur interne s\'est produite'}), 500  # 500 Internal Server Error
 
 
 
 
 @auth.get("/me")
+@jwt_required()
 def me():
-    return {"user":"me"}
+    user_id = get_jwt_identity()
+    user = Utilisateurs.query.filter_by(id_utilisateur=user_id).first()
+
+    return jsonify({
+        'user': user.nom_utilisateur
+        
+    })
+
 
 
