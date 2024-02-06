@@ -36,5 +36,5 @@ def download_images(search_terms):
 
         print(f"{len(thumbnails)} images appended in the '{output_folder}' folder for search term: '{search_term}' with .png extension.")
 
-search_terms = ['prairie', 'gateau', 'fusée', 'chaussure', 'voiture', 'mamie', 'vélo']
+search_terms = ['france 3', 'tmc', 'france 4', 'gulli']
 download_images(search_terms)

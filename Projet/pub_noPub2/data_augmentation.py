@@ -41,5 +41,5 @@ def augmenter_images(input_folder, output_folder, prefix, nb_augmentations):
 # Appliquer la data augmentation pour les images avec logos
 augmenter_images(dossier_image_logo, os.path.join(dossier_augmente, 'logo'), 'aug_logo', 5)
 
-# Appliquer la data augmentation pour les images sans logos
-augmenter_images(dossier_image_no_logo, os.path.join(dossier_augmente, 'no_logo'), 'aug_no_logo', 5)
+# # Appliquer la data augmentation pour les images sans logos
+# augmenter_images(dossier_image_no_logo, os.path.join(dossier_augmente, 'no_logo'), 'aug_no_logo', 5)

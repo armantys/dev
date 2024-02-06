@@ -1,57 +1,98 @@
 import cv2
+import requests
+import numpy as np
+from requests.auth import HTTPDigestAuth
 import tensorflow as tf
 from tensorflow.keras.preprocessing import image
-from tensorflow.keras.optimizers import Adam
-import numpy as np
 
 # Charger le modèle pré-entraîné
-model = tf.keras.models.load_model('modele_logo.h5')
+model = tf.keras.models.load_model('modele_logo_alternatif.h5')
 
-# Paramètres pour la capture vidéo
-cap = cv2.VideoCapture(0)  # 0 correspond à la caméra par défaut
-cap.set(3, 640)  # Largeur de la fenêtre de capture
-cap.set(4, 480)  # Hauteur de la fenêtre de capture
+# Paramètres de la caméra Foscam
+adresse_ip = '192.168.20.37'  # Adresse IP de votre caméra Foscam
+port = 88  # Port par défaut pour la plupart des caméras Foscam
+nom_utilisateur = 'dev_IA_P3'  # Nom d'utilisateur de la caméra
+mot_de_passe = 'dev_IA_P3'  # Mot de passe de la caméra
 
-# Réglages du modèle
-input_shape = (100, 100, 3)
-batch_size = 32
+# URL du flux vidéo de la caméra
+url_flux_video = f'http://{adresse_ip}:{port}/cgi-bin/CGIProxy.fcgi?cmd=snapPicture2&usr={nom_utilisateur}&pwd={mot_de_passe}'
 
-# Réentraîner le modèle avec un taux d'apprentissage plus bas
-model.compile(optimizer=Adam(learning_rate=0.0001), loss='binary_crossentropy', metrics=['accuracy'])
+# Fonction pour afficher le texte sur l'image
+def afficher_texte(image, texte, position=(10, 30), couleur=(0, 255, 0), taille=1):
+    cv2.putText(image, texte, position, cv2.FONT_HERSHEY_SIMPLEX, taille, couleur, 2)
+
+# Déclarations des variables globales pour stocker les coordonnées des boîtes englobantes
+top_left_box = (400, 80)
+top_right_box = (1380, 80)
+
+# Fonction de callback pour capturer les événements de souris
+def mouse_callback(event, x, y, flags, param):
+    global top_left_box, top_right_box
+
+    if event == cv2.EVENT_LBUTTONDOWN:
+        # Vérifier si le clic est dans la zone de la boîte englobante du haut gauche
+        if x < 100 and y < 100:
+            top_left_box = (x, y)
+        # Vérifier si le clic est dans la zone de la boîte englobante du haut droit
+        elif x > width//2 and y < 100:
+            top_right_box = (x, y)
+
+# Installer le gestionnaire d'événements de la souris
+cv2.namedWindow('Flux vidéo de la caméra Foscam')
+cv2.setMouseCallback('Flux vidéo de la caméra Foscam', mouse_callback)
 
 while True:
-    # Capture d'une image depuis la caméra
-    ret, frame = cap.read()
+    # Récupérer une image du flux vidéo de la caméra
+    reponse = requests.get(url_flux_video, auth=HTTPDigestAuth(nom_utilisateur, mot_de_passe), stream=True)
+    img_array = np.array(bytearray(reponse.content), dtype=np.uint8)
+    frame = cv2.imdecode(img_array, -1)
 
-    # Redimensionner l'image pour l'entrée du modèle
-    img = cv2.resize(frame, (input_shape[0], input_shape[1]))
-    img_array = image.img_to_array(img)
-    img_array = np.expand_dims(img_array, axis=0)
-    img_array /= 255.0  # Normalisation
+    # Découper l'image en deux parties : haut gauche et haut droite
+    height, width, _ = frame.shape
+    top_left = frame[0:height//2, 0:width//2]
+    top_right = frame[0:height//2, width//2:width]
 
-    # Effectuer la prédiction
-    prediction = model.predict(img_array)
+    # Redimensionner les images pour l'entrée du modèle
+    input_shape = (100, 100, 3)
+    top_left_resized = cv2.resize(top_left, (input_shape[0], input_shape[1]))
+    top_right_resized = cv2.resize(top_right, (input_shape[0], input_shape[1]))
 
-    # Interpréter la prédiction et afficher le résultat sur l'image
-    if prediction[0][0] > 0.5:
-        label = "Logo"
-        color = (0, 255, 0)  # Couleur verte pour le texte
-        if label == "Pas de logo":
-            print(f"Faux positif - Image avec logo prédite comme sans logo. Probabilité : {prediction[0][0]}")
-    else:
-        label = "Pas de logo"
-        color = (0, 0, 255)  # Couleur rouge pour le texte
-        if label == "Logo":
-            print(f"Faux négatif - Image sans logo prédite comme avec logo. Probabilité : {1 - prediction[0][0]}")
+    # Convertir les images en tableaux numpy
+    top_left_array = np.expand_dims(top_left_resized, axis=0)
+    top_right_array = np.expand_dims(top_right_resized, axis=0)
 
-    # Afficher le résultat sur l'image en temps réel
-    cv2.putText(frame, f"{label} - {prediction[0][0]:.2f}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 2)
-    cv2.imshow('Logo Detection', frame)
+    # Normalisation des images
+    top_left_array = top_left_array / 255.0
+    top_right_array = top_right_array / 255.0
+
+    # Effectuer les prédictions pour les deux parties de l'image
+    prediction_top_left = model.predict(top_left_array)
+    prediction_top_right = model.predict(top_right_array)
+
+    # Calculer le pourcentage de certitude de la prédiction
+    pourcentage_top_left = prediction_top_left[0][0] * 100
+    pourcentage_top_right = prediction_top_right[0][0] * 100
+
+    # Interpréter les prédictions et afficher le résultat sur l'image
+    texte_top_left = f"No Pub ({pourcentage_top_left:.2f}%)" if prediction_top_left[0][0] > 0.7 else f"Pub ({pourcentage_top_left:.2f}%)"
+    couleur_top_left = (0, 255, 0) if prediction_top_left[0][0] > 0.7 else (0, 0, 255)
+    texte_top_right = f"No Pub ({pourcentage_top_right:.2f}%)" if prediction_top_right[0][0] > 0.7 else f"Pub ({pourcentage_top_right:.2f}%)"
+    couleur_top_right = (0, 255, 0) if prediction_top_right[0][0] > 0.7 else (0, 0, 255)
+
+    # Dessiner la boîte englobante autour des coordonnées déclarées
+    cv2.rectangle(frame, top_left_box, (top_left_box[0] + 100, top_left_box[1] + 100), couleur_top_left, 2)
+    cv2.rectangle(frame, top_right_box, (top_right_box[0] + 100, top_right_box[1] + 100), couleur_top_right, 2)
+
+    # Afficher les résultats sur l'image en temps réel
+    afficher_texte(frame, texte_top_left, position=(10, 30), couleur=couleur_top_left)
+    afficher_texte(frame, texte_top_right, position=(width//2 + 10, 30), couleur=couleur_top_right)
+
+    # Afficher la trame en temps réel
+    cv2.imshow('Flux vidéo de la caméra Foscam', frame)
 
     # Quitter la boucle si la touche 'q' est enfoncée
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
-# Libérer la capture vidéo et fermer la fenêtre
-cap.release()
+# Fermer la fenêtre et libérer les ressources
 cv2.destroyAllWindows()
