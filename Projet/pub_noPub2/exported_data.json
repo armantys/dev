@@ -1,0 +1,26 @@
+{
+    "acquisition": {
+        "camera": {
+            "path_rtsp": "c'est ici",
+            "ip": "192.168.20.37",
+            "mdp": "dev_IA_P3",
+            "pwd": "dev_IA_P3",
+            "path_snapshot": "",
+            "username": "dev_IA_P3",
+            "port": "88"
+        },
+        "historique": {
+            "19tuXVcRWa4xvQEb139O": {
+                "example_key": "example_value"
+            },
+            "UE5l1xBhzynRD9K0SqQj": {
+                "example_key": "example_value"
+            },
+            "qf1ij06fyxo1CUjzZf46": {
+                "example_key": "example_value"
+            },
+            "quiq0DfJk51aEmkbiAJa": {
+                "hp_acquisition": {
+                    "duree_salves": 10,
+                    "nb_images": 20,
+                    "timestamp": 
