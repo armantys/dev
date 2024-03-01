@@ -4,7 +4,7 @@ import tensorflow as tf
 from tensorflow import keras
 
 # Charger le modèle CNN Keras entraîné
-model_cnn = keras.models.load_model('test_2.keras')
+model_cnn = keras.models.load_model('test_2.h5')
 
 # Définir la taille du carré
 square_size = 100

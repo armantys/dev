@@ -6,7 +6,7 @@ import tensorflow as tf
 from tensorflow.keras.preprocessing import image
 
 # Charger le modèle pré-entraîné
-model = tf.keras.models.load_model('modele_logo_alternatif.h5')
+model = tf.keras.models.load_model('test_5.keras')
 
 # Paramètres de la caméra Foscam
 adresse_ip = '192.168.20.37'  # Adresse IP de votre caméra Foscam
