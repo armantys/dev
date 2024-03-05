@@ -1,61 +1,44 @@
-import firebase_admin 
-from firebase_admin import credentials,firestore, db
+import time  # Importer le module time pour utiliser la fonction sleep
+import connexion_firebase
+from snapshot import enregistrer_snapshot
 
+latest_acquisition = connexion_firebase.get_latest_acquisition()
+latest_application = connexion_firebase.get_latest_application()
+latest_model_IA = connexion_firebase.get_latest_model_IA()
 
+# Utilisez les données récupérées selon vos besoins
+print("Dernière acquisition:", latest_acquisition)
+print("Dernière application:", latest_application)
+print("Dernier modèle IA:", latest_model_IA)
 
-cred = credentials.Certificate("cred.json")
-firebase_admin.initialize_app(cred)
+def main():
+    # Récupérer les données de la dernière acquisition depuis Firebase
+    latest_acquisition = connexion_firebase.get_latest_acquisition()
 
-# Récupérer une référence à la base de données Firestore
-db = firestore.client()
+    # Vérifier si les données ont été récupérées avec succès
+    if latest_acquisition:
+        # Récupérer la durée de la salve et le nombre d'images
+        duree_salve, nb_images = latest_acquisition
 
-# Récupérer une référence à la collection "BDD_pub_nopub"
-bdd_ref = db.collection("BDD_pub_nopub")
+        adresse_ip = '192.168.20.37'  # Adresse IP de votre caméra IP
+        port = 88  # Port par défaut pour la plupart des caméras IP
+        nom_utilisateur = 'dev_IA_P3'  # Nom d'utilisateur de la caméra
+        mot_de_passe = 'dev_IA_P3'  # Mot de passe de la caméra
 
-# Récupérer une référence à la sous-collection "acquisition"
-acquisition_ref = bdd_ref.document("acquisition").collection("historique")
-# Récupérer une référence à la sous-collection "application"
-application_ref = bdd_ref.document("application").collection("version")
-# Récupérer une référence à la sous-collection "Model IA"
-model_IA_ref = bdd_ref.document("modele_IA").collection("version")
+        # Calculer le délai entre chaque enregistrement d'image
+        delai_entre_images = duree_salve / nb_images
 
-# Récupérer une référence à la sous-collection avec un ID aléatoire
-docs_refacquisition = acquisition_ref.order_by('hp_acquisition.timestamp', direction=firestore.Query.DESCENDING).limit(1)
-docs_refapplication = application_ref.order_by('timestamp', direction=firestore.Query.DESCENDING).limit(1)
-docs_refmodel_IA = model_IA_ref.order_by('timestamp', direction=firestore.Query.DESCENDING).limit(1)
+        # Appel de la fonction pour enregistrer chaque snapshot
+        for i in range(nb_images):
+            # Construire le nom de fichier avec un indice unique
+            filename = f'snapshot\snapshot_{duree_salve}_{i}.jpg'
+            # Appel de la fonction pour enregistrer un snapshot
+            enregistrer_snapshot(adresse_ip, port, nom_utilisateur, mot_de_passe, duree_salve, 1, filename)
+            print(f"Snapshot {i+1}/{nb_images} enregistré avec succès!")
+            # Attendre le délai entre chaque enregistrement
+            time.sleep(delai_entre_images)
+    else:
+        print("Aucune acquisition trouvée dans la base de données.")
 
-# Récupérer le dernier document de la sous-collection
-docsaquisition = docs_refacquisition.stream()
-docsapplication = docs_refapplication.stream()
-docs_refmodel_IA = docs_refmodel_IA.stream()
-
-# Vérifier s'il y a des documents à afficher
-if docsaquisition:
-    for doc in docsaquisition:
-        print(doc.id, doc.to_dict())
-        doc_dict = doc.to_dict()
-        # Accéder aux valeurs des champs "duree_salves" et "nb_images" dans le mappage "hp_acquisition"
-        duree_salves = doc_dict['hp_acquisition']['duree_salves']
-        nb_images = doc_dict['hp_acquisition']['nb_images']
-        # Afficher les valeurs des champs
-        print("duree_salves:", duree_salves)
-        print("nb_images:", nb_images)
-else:
-    print("Aucun document trouvé")
-
-    # Vérifier s'il y a des documents à afficher
-if docsapplication:
-    for doc in docsapplication:
-        print(doc.id, doc.to_dict())
-else:
-    print("Aucun document trouvé")
-
-        # Vérifier s'il y a des documents à afficher
-if docs_refmodel_IA:
-    for doc in docs_refmodel_IA:
-        print(doc.id, doc.to_dict())
-        doc_dict = doc.to_dict()
-        seuil_decision = doc_dict['seuil_decision']
-        print("seuil de decision : ", seuil_decision)
-else:
-    print("Aucun document trouvé")
+if __name__ == "__main__":
+    main()
