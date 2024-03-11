@@ -27,8 +27,8 @@ def train_model():
     target_size = (100, 100)
 
     # Charger et redimensionner les images depuis les dossiers "pub" et "nopub"
-    pub_images = load_and_resize_images_from_folder(r"datasets\pub_no_pubV3\logo-tv")
-    nopub_images = load_and_resize_images_from_folder(r"datasets\pub_no_pubV3\pas-logo-tv")
+    pub_images = load_and_resize_images_from_folder(r"datasets\pub_no_pubV3\logo-tv", target_size)
+    nopub_images = load_and_resize_images_from_folder(r"datasets\pub_no_pubV3\pas-logo-tv", target_size)
 
     # Créer les étiquettes correspondantes (1 pour "pub" et 0 pour "nopub")
     pub_labels = np.ones(len(pub_images))
@@ -91,7 +91,7 @@ def predict_images(images):
     return labels
 
 # Définir la fonction pour charger et redimensionner les images depuis le dossier
-def load_and_resize_images_from_folder(folder):
+def load_and_resize_images_from_folder(folder, target_size):
     images = []
     print("Chargement des images depuis le dossier:", folder)
     abs_folder = os.path.abspath(folder)  # Chemin absolu du dossier
