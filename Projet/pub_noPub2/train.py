@@ -8,18 +8,27 @@ from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping
 
 print("Répertoire de travail actuel:", os.getcwd())
 
+# Déclarer une variable globale pour stocker le modèle
+loaded_model = None
+
 def load_or_train_model():
+    global loaded_model
+    if loaded_model is not None:
+        return loaded_model
+
     model_path = "test_5.keras"
     if os.path.exists(model_path):
         # Charger le modèle existant
         print("Chargement du modèle existant...")
-        return tf.keras.models.load_model(model_path)
+        loaded_model = tf.keras.models.load_model(model_path)
+        return loaded_model
     else:
         # Si le modèle n'existe pas, effectuer le processus d'entraînement
         print("Aucun modèle n'a été trouvé. Entraînement d'un nouveau modèle...")
         # Votre code d'entraînement ici
         # Assurez-vous de sauvegarder le modèle après l'entraînement
         model = train_model()  # Appel de la fonction pour l'entraînement du modèle
+        loaded_model = model  # Assigner le modèle chargé à la variable globale
         return model
 
 def train_model():

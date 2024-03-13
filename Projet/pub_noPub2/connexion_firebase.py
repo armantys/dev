@@ -1,13 +1,25 @@
 import firebase_admin 
-from firebase_admin import credentials, firestore
+from firebase_admin import credentials, firestore, storage
 
-def initialize_firestore(app_name="default"):
+def initialize_firestore():
     try:
-        firebase_admin.get_app(app_name)
+        app = firebase_admin.get_app()
     except ValueError:
         cred = credentials.Certificate("cred.json")
-        firebase_admin.initialize_app(cred, name=app_name)
-    return firestore.client(firebase_admin.get_app(app_name))
+        app = firebase_admin.initialize_app(cred, {
+            'storageBucket': 'pubnopub-7fc03.appspot.com'
+        })
+    return firestore.client(app=app)
+
+def initialize_storage():
+    try:
+        app = firebase_admin.get_app()
+    except ValueError:
+        cred = credentials.Certificate("cred.json")
+        app = firebase_admin.initialize_app(cred, {
+            'storageBucket': 'pubnopub-7fc03.appspot.com'
+        })
+    return storage.bucket(app=app)
 
 def get_latest_acquisition():
     db = initialize_firestore()
