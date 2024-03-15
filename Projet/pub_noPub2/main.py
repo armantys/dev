@@ -2,15 +2,15 @@ import datetime
 import os
 import time
 import connexion_firebase
-from snapshot import enregistrer_snapshot
-from predict import obtenir_pourcentages
+from snapshot import enregistrer_snapshot,obtenir_timestamp_str
+from predict import obtenir_pourcentages, enregistrer_dans_firestore
 import cv2
 import tensorflow as tf
 import numpy as np
-from train import predict_images, load_or_train_model
+from train import load_or_train_model
+
 
 while True:
-
     latest_acquisition = connexion_firebase.get_latest_acquisition()
     latest_application = connexion_firebase.get_latest_application()
     latest_model_IA = connexion_firebase.get_latest_model_IA()
@@ -22,7 +22,6 @@ while True:
 
     snapshot_folder = os.path.join(os.getcwd(), 'snapshot')
 
-    # Assurez-vous que le répertoire datedujour existe. S'il n'existe pas, créez-le.
     if not os.path.exists(snapshot_folder):
         os.makedirs(snapshot_folder)
 
@@ -43,13 +42,10 @@ while True:
                 nom_utilisateur = 'dev_IA_P3'
                 mot_de_passe = 'dev_IA_P3'
 
-                # Appeler la fonction pour capturer et enregistrer les images
-                images, predictions = enregistrer_snapshot(adresse_ip, port, nom_utilisateur, mot_de_passe, duree_salve, nb_images)
+                images, predictions, timestamp_str = enregistrer_snapshot(adresse_ip, port, nom_utilisateur, mot_de_passe, duree_salve, nb_images)
 
-                # Effectuer des opérations sur les images, telles que la prédiction
                 print("Prédictions:", predictions)
 
-                # Appel de la fonction pour obtenir les pourcentages
                 pourcentages_pub, pourcentages_nopub = obtenir_pourcentages(predictions)
 
                 pourcentages_pub_list = []
@@ -64,14 +60,15 @@ while True:
                 print("Pourcentages de chance que ce soit une publicité :", pourcentages_pub_list)
                 print("Pourcentages de chance que ce ne soit pas une publicité :", pourcentages_nopub_list)
 
-                # Calculer la moyenne des éléments de chaque tableau
                 mean_pub = np.mean(pourcentages_pub)
                 mean_no_pub = np.mean(pourcentages_nopub)
 
-                # Afficher les moyennes
                 print("Moyenne des probabilités de pub :", mean_pub)
                 print("Moyenne des probabilités de no pub :", mean_no_pub)
 
+
+                timestamp_str = obtenir_timestamp_str()
+                enregistrer_dans_firestore(pourcentages_pub_list, pourcentages_nopub_list, mean_pub, mean_no_pub, timestamp_str)
             else:
                 print("Aucune acquisition trouvée dans la base de données.")
         else:
