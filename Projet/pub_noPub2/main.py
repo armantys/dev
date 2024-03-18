@@ -2,6 +2,7 @@ import datetime
 import os
 import time
 import connexion_firebase
+from google.cloud import storage
 from snapshot import enregistrer_snapshot,obtenir_timestamp_str
 from predict import obtenir_pourcentages, enregistrer_dans_firestore
 import cv2
