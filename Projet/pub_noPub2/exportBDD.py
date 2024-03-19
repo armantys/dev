@@ -1,47 +1,47 @@
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
+from connexion_firebase import initialize_firestore
 import json
 from datetime import datetime
 
-def convert_datetime_to_string(data):
-    for key, value in data.items():
-        if isinstance(value, dict):
-            convert_datetime_to_string(value)
-        elif isinstance(value, datetime):
-            data[key] = value.strftime('%Y-%m-%d %H:%M:%S')
+def custom_json_serializer(obj):
+    """
+    Fonction pour sérialiser les objets datetime en chaînes de caractères
+    et convertir les DocumentReference en leur ID.
+    """
+    if isinstance(obj, datetime):
+        return obj.strftime('%Y-%m-%d %H:%M:%S.%f')
+    elif isinstance(obj, firestore.DocumentReference):
+        return obj.id  # Convertir DocumentReference en ID du document référencé
+    raise TypeError(f'Object of type {obj.__class__.__name__} is not JSON serializable')
 
-# Téléchargez votre fichier de clé de compte de service depuis Firebase et placez-le dans votre répertoire de travail
-cred = credentials.Certificate("cred.json")
-firebase_admin.initialize_app(cred)
+def export_collection(collection_ref, data):
+    """
+    Fonction récursive pour exporter une collection et ses sous-collections.
+    """
+    docs = collection_ref.stream()
+    for doc in docs:
+        data[doc.id] = doc.to_dict()
+        subcollections = doc.reference.collections()
+        for subcollection in subcollections:
+            data[doc.id][subcollection.id] = {}
+            export_collection(subcollection, data[doc.id][subcollection.id])
 
-# Initialisez une instance de Firestore
-db = firestore.client()
+# Initialisez Firestore
+db = initialize_firestore()
 
-# Définissez le nom de la collection que vous souhaitez exporter
-collection_name = "BDD_pub_nopub"
+# Récupérez une référence à la racine de la base de données
+root_ref = db.collection('BDD_pub_nopub')
 
-# Récupérez tous les documents de la collection spécifiée
-docs = db.collection(collection_name).stream()
+# Initialisez un dictionnaire pour stocker les données exportées
+exported_data = {}
 
-# Initialisez un dictionnaire pour stocker les données
-data = {}
+# Exportez la racine et ses sous-collections récursivement
+export_collection(root_ref, exported_data)
 
-# Ajoutez les données de chaque document à votre dictionnaire
-for doc in docs:
-    data[doc.id] = doc.to_dict()
+# Écrivez les données dans un fichier JSON en utilisant la sérialisation personnalisée
+with open("exported_data.json", "w") as json_file:
+    json.dump(exported_data, json_file, indent=4, default=custom_json_serializer)
 
-    # Si le document a des sous-collections, récupérez également leurs données
-    collections = db.collection(collection_name).document(doc.id).collections()
-    for col in collections:
-        col_data = {}
-        col_docs = col.stream()
-        for col_doc in col_docs:
-            col_data[col_doc.id] = col_doc.to_dict()
-        data[doc.id][col.id] = col_data
-
-# Exportez les données au format JSON avec indentation pour la lisibilité
-with open('exported_data.json', 'w') as json_file:
-    json.dump(data, json_file, indent=4)
-
-print("Exportation des données terminée avec succès !")
+print("Export completed successfully!")
