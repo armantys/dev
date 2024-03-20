@@ -16,7 +16,7 @@ def load_or_train_model():
     if loaded_model is not None:
         return loaded_model
 
-    model_path = r"C:\Users\ludovic.souquet\Documents\GitHub\ludovic.souquet\Projet\pub_noPub2\model_with_dropout1.h5"
+    model_path = r"test_5.keras"
     if os.path.exists(model_path):
         # Charger le modèle existant
         print("Chargement du modèle existant...")

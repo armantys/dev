@@ -23,7 +23,7 @@ MODEL = None
 def load_global_model():
     global MODEL
     if MODEL is None:
-        MODEL = load_model(r'C:\Users\ludovic.souquet\Documents\GitHub\ludovic.souquet\Projet\pub_noPub2\model_with_dropout1.h5')
+        MODEL = load_model(r'model_with_dropout1.h5')
 
 def apply_gamma_correction(image, gamma=1.0):
     inv_gamma = 1.0 / gamma
@@ -67,6 +67,7 @@ def predict_images(images):
         image_array = np.expand_dims(image_array, axis=0)
         prediction = MODEL.predict(image_array)
         predictions.append(prediction)
+        print(prediction)
     return predictions
 
 def enregistrer_snapshot(adresse_ip, port, nom_utilisateur, mot_de_passe, duree_salve, nb_images_par_salve):

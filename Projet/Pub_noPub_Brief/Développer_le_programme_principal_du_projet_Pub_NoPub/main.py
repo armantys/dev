@@ -3,7 +3,7 @@ import os
 import time
 import connexion_firebase
 from google.cloud import storage
-from snapshot import enregistrer_snapshot,obtenir_timestamp_str
+from Récupérer_les_images_pour_le_projet_PubNo_Pub.snapshot import enregistrer_snapshot,obtenir_timestamp_str
 from predict import obtenir_pourcentages, enregistrer_dans_firestore
 import cv2
 import tensorflow as tf
