@@ -8,6 +8,7 @@ from predict import obtenir_pourcentages, enregistrer_dans_firestore
 import cv2
 import tensorflow as tf
 import numpy as np
+from feu import allumer_feu
 from train import load_or_train_model
 
 
@@ -16,10 +17,6 @@ while True:
     latest_application = connexion_firebase.get_latest_application()
     latest_model_IA = connexion_firebase.get_latest_model_IA()
     date_du_jour = datetime.date.today().strftime("%Y-%m-%d")
-
-    print("Dernière acquisition:", latest_acquisition)
-    print("Dernière application:", latest_application)
-    print("Dernier modèle IA:", latest_model_IA)
 
     snapshot_folder = os.path.join(os.getcwd(), 'snapshot')
 
@@ -45,7 +42,6 @@ while True:
 
                 images, predictions, timestamp_str = enregistrer_snapshot(adresse_ip, port, nom_utilisateur, mot_de_passe, duree_salve, nb_images)
 
-                print("Prédictions:", predictions)
 
                 pourcentages_pub, pourcentages_nopub = obtenir_pourcentages(predictions)
 
@@ -53,19 +49,19 @@ while True:
                 pourcentages_nopub_list = []
 
                 for i, (pourcentage_pub, pourcentage_nopub) in enumerate(zip(pourcentages_pub, pourcentages_nopub), 1):
-                    print(f"Pourcentage de chance que ce soit une publicité pour l'image {i}: {pourcentage_pub}")
-                    print(f"Pourcentage de chance que ce ne soit pas une publicité pour l'image {i}: {pourcentage_nopub}")
                     pourcentages_pub_list.append(pourcentage_pub)
                     pourcentages_nopub_list.append(pourcentage_nopub)
-
-                print("Pourcentages de chance que ce soit une publicité :", pourcentages_pub_list)
-                print("Pourcentages de chance que ce ne soit pas une publicité :", pourcentages_nopub_list)
 
                 mean_pub = np.mean(pourcentages_pub)
                 mean_no_pub = np.mean(pourcentages_nopub)
 
-                print("Moyenne des probabilités de pub :", mean_pub)
-                print("Moyenne des probabilités de no pub :", mean_no_pub)
+
+                            # Allumer le feu vert si la moyenne des probabilités de non-publicité est supérieure à 50%
+                if mean_no_pub > 50:
+                    allumer_feu("V")
+                else:
+                    allumer_feu("R")
+
 
 
                 timestamp_str = obtenir_timestamp_str()

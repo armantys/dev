@@ -23,7 +23,12 @@ MODEL = None
 def load_global_model():
     global MODEL
     if MODEL is None:
-        MODEL = load_model('test_5.keras')
+        MODEL = load_model(r'C:\Users\ludovic.souquet\Documents\GitHub\ludovic.souquet\Projet\pub_noPub2\model_with_dropout1.h5')
+
+def apply_gamma_correction(image, gamma=1.0):
+    inv_gamma = 1.0 / gamma
+    table = np.array([((i / 255.0) ** inv_gamma) * 255 for i in np.arange(0, 256)]).astype("uint8")
+    return cv2.LUT(image, table)
 
 def capture_images(url_flux_video, nom_utilisateur, mot_de_passe, nb_images_par_salve, snapshot_folder, intervalle, timestamp_str):
     images = []
@@ -32,11 +37,14 @@ def capture_images(url_flux_video, nom_utilisateur, mot_de_passe, nb_images_par_
         if response.status_code == 200:
             img_array = np.array(bytearray(response.content), dtype=np.uint8)
             frame = cv2.imdecode(img_array, -1)
-            height, width, _ = frame.shape
-            top_right = frame[0:height//2, width//2:width]
+            # Appliquer une correction gamma à l'image capturée
+            corrected_image = apply_gamma_correction(frame, gamma=0.7)  # Ajuster le paramètre gamma selon vos besoins
+            # Spécifier les coordonnées de la région d'intérêt manuellement (xmin, ymin, xmax, ymax)
+            roi = corrected_image[170:270, 1230:1330]
+            cropped_image = cv2.resize(roi, (100, 100))  # Recadrer l'image en 100x100 pixels
             filename = f"snapshot_{i+1}.jpg"
             filepath = os.path.join(snapshot_folder, filename)
-            cv2.imwrite(filepath, top_right)
+            cv2.imwrite(filepath, cropped_image)
             print(f"Snapshot {i+1}/{nb_images_par_salve} enregistré avec succès dans {snapshot_folder}!")
             image = cv2.imread(filepath)
             images.append(image)
@@ -64,7 +72,7 @@ def predict_images(images):
 def enregistrer_snapshot(adresse_ip, port, nom_utilisateur, mot_de_passe, duree_salve, nb_images_par_salve):
     load_global_model()  # Charger le modèle si ce n'est pas déjà fait
     start_time = time.time()  # Enregistrer le temps de début
-    intervalle = duree_salve / nb_images_par_salve
+    intervalle = int(duree_salve) / int(nb_images_par_salve)
     date_du_jour = datetime.date.today().strftime("%Y-%m-%d")
     now = datetime.datetime.now()
     timestamp_str = now.strftime("%Y-%m-%d_%H-%M-%S")
@@ -74,7 +82,7 @@ def enregistrer_snapshot(adresse_ip, port, nom_utilisateur, mot_de_passe, duree_
         os.makedirs(snapshot_folder)
 
     url_flux_video = f'http://{adresse_ip}:{port}/cgi-bin/CGIProxy.fcgi?cmd=snapPicture2&usr={nom_utilisateur}&pwd={mot_de_passe}'
-    images = capture_images(url_flux_video, nom_utilisateur, mot_de_passe, nb_images_par_salve, snapshot_folder, intervalle, timestamp_str)
+    images = capture_images(url_flux_video, nom_utilisateur, mot_de_passe, int(nb_images_par_salve), snapshot_folder, intervalle, timestamp_str)
     predictions = predict_images(images)
 
     end_time = time.time()  # Enregistrer le temps de fin
