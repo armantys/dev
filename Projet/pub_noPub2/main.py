@@ -5,7 +5,6 @@ import connexion_firebase
 from google.cloud import storage
 from snapshot import enregistrer_snapshot,obtenir_timestamp_str
 from predict import obtenir_pourcentages, enregistrer_dans_firestore
-from model import predict_advertisement
 import cv2
 import tensorflow as tf
 import numpy as np
