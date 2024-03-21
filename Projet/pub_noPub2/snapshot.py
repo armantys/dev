@@ -8,6 +8,7 @@ import cv2
 import numpy as np
 from tensorflow.keras.models import load_model
 from connexion_firebase import initialize_storage
+from model import predict_advertisement
 
 
 def obtenir_timestamp_str():
@@ -20,10 +21,7 @@ bucket = initialize_storage()
 # Charger le modèle une seule fois au début du programme
 MODEL = None
 
-def load_global_model():
-    global MODEL
-    if MODEL is None:
-        MODEL = load_model(r'model_with_dropout1.h5')
+
 
 def apply_gamma_correction(image, gamma=1.0):
     inv_gamma = 1.0 / gamma
@@ -62,16 +60,11 @@ def upload_to_storage(filepath, filename, timestamp_str):
 def predict_images(images):
     predictions = []
     for image in images:
-        img_resized = cv2.resize(image, (100, 100))
-        image_array = np.array(img_resized)
-        image_array = np.expand_dims(image_array, axis=0)
-        prediction = MODEL.predict(image_array)
-        predictions.append(prediction)
-        print(prediction)
+        prob_advertisement, prob_no_advertisement = predict_advertisement(image)
+        predictions.append([float(prob_advertisement), float(prob_no_advertisement)])
     return predictions
 
 def enregistrer_snapshot(adresse_ip, port, nom_utilisateur, mot_de_passe, duree_salve, nb_images_par_salve):
-    load_global_model()  # Charger le modèle si ce n'est pas déjà fait
     start_time = time.time()  # Enregistrer le temps de début
     intervalle = int(duree_salve) / int(nb_images_par_salve)
     date_du_jour = datetime.date.today().strftime("%Y-%m-%d")

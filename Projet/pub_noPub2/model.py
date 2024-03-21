@@ -15,8 +15,8 @@ def predict_advertisement(image_data, model_path='model_with_dropout1.h5'):
     # prédiction
     prediction = model.predict(img_array)
 
-    prob_advertisement_a = prediction[0][0]  # Probabilité de "advertisement"
-    prob_no_advertisement_a = prediction[0][1]  # Probabilité de "no advertisement"
+    prob_no_advertisement_a = prediction[0][0]  # Probabilité de "advertisement"
+    prob_advertisement_a = prediction[0][1]  # Probabilité de "no advertisement"
 
     # Formater les probabilités pour les afficher sous forme de chiffres normaux
     prob_advertisement = np.format_float_positional(prob_advertisement_a, precision=6) # logo

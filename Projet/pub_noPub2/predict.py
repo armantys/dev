@@ -1,6 +1,9 @@
 import firebase_admin
 from firebase_admin import credentials
+import tensorflow as tf
 from connexion_firebase import initialize_firestore, initialize_storage
+from tensorflow.keras.preprocessing import image
+import numpy as np
 from google.cloud import firestore
 import datetime
 
@@ -14,8 +17,8 @@ def obtenir_pourcentages(predictions):
     pourcentages_nopub = []
 
     for prediction in predictions:
-        pourcentage_pub = prediction[0][0] * 100
-        pourcentage_nopub = prediction[0][1] * 100
+        pourcentage_pub = prediction[0] * 100
+        pourcentage_nopub = prediction[1] * 100
         pourcentages_pub.append(pourcentage_pub)
         pourcentages_nopub.append(pourcentage_nopub)
 
@@ -79,3 +82,25 @@ def enregistrer_dans_firestore(pourcentages_pub, pourcentages_nopub, mean_pub, m
         u'timestamp': timestamp
     })
 # Utiliser initialize_storage() où vous en avez besoin dans le code
+    
+
+def predict_advertisement(image_path, model_path='model_with_dropout1.h5'):
+    # Charger le modèle
+    model = tf.keras.models.load_model(model_path)
+
+    # Charger et prétraiter l'image
+    img = image.load_img(image_path, target_size=(100, 100))
+    img_array = image.img_to_array(img)
+    img_array = np.expand_dims(img_array, axis=0) / 255.0
+
+    # Faire une prédiction
+    prediction = model.predict(img_array)
+
+    # Formater les probabilités
+    prob_advertisement = np.format_float_positional(prediction[0][0], precision=6)
+    prob_no_advertisement = np.format_float_positional(prediction[0][1], precision=6)
+
+    print("Probabilité de publicité:", prob_advertisement)
+    print("Probabilité de non-publicité:", prob_no_advertisement)
+
+    return prob_advertisement, prob_no_advertisement
