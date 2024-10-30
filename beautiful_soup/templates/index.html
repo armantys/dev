@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recherche d'Hôtels</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- Formulaire collant -->
+        <div class="form-container">
+            <h1>Recherche d'Hôtels</h1>
+            <form action="/search" method="POST">
+                <label for="city">Ville :</label>
+                <input type="text" id="city" name="city" placeholder="Entrez une ville" required>
+                
+                <label for="checkin">Date d'arrivée :</label>
+                <input type="date" id="checkin" name="checkin" required>
+                
+                <label for="checkout">Date de départ :</label>
+                <input type="date" id="checkout" name="checkout" required>
+                
+                <button type="submit">Rechercher</button>
+            </form>
+        </div>
+
+        {% if hotels %}
+            <h2>Résultats de la recherche</h2>
+            <div class="results">
+                {% for hotel in hotels %}
+                    <div class="hotel-card">
+                        <h3 class="hotel-name">{{ hotel.name }}</h3>
+                        <p><strong>Emplacement :</strong> {{ hotel.location }}</p>
+                        <p><strong>Prix :</strong> {{ hotel.price }}</p>
+                        <p><strong>Note :</strong> {{ hotel.rating }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
