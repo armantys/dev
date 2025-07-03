@@ -1,4 +1,4 @@
-name: Test FastAPI + IA
+name: Test FastAPI + IAp
 
 on:
   push:
