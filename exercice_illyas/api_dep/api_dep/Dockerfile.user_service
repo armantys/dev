@@ -1,0 +1,10 @@
+FROM python:3.10
+
+WORKDIR /WS
+
+COPY ./src /WS
+
+RUN pip install --no-cache-dir --upgrade -r /WS/requirements.txt
+
+
+CMD ["sh","-c", "uvicorn main:app --host 0.0.0.0 --port 8000"]

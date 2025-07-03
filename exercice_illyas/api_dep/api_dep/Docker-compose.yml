@@ -1,0 +1,18 @@
+version: "3"
+
+services:
+  user_service: 
+    build:
+      context: .
+      dockerfile: ./Dockerfile.user_service
+    container_name: container_user_service
+    ports:
+      - "8000:8000" 
+  
+  bdd: 
+    build:
+      context: .
+      dockerfile: ./Dockerfile.user_bdd
+    container_name: user_bdd
+    ports:
+      - "5432:5432" 
