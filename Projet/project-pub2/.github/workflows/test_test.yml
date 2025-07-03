@@ -2,7 +2,8 @@ name: Test simple2
 
 on:
   push:
-    branches: [main]
+    branches: 
+      - main
 
 jobs:
   test:
